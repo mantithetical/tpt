@@ -5,6 +5,11 @@
 declare -a deps=("c9s" "fsnotify" "jdkato" "magiconair" "mitchellh" "pelletier"
 "spf13")
 
+if [ -z "$GOPATH" ]; then
+    export GOPATH=$HOME/go;
+fi
+export PATH=$PATH:$GOPATH/bin
+
 if [[ "$OSTYPE" == "darwin"* ]]; then
     for i in "${deps[@]}"
     do
