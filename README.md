@@ -10,8 +10,11 @@ Notes:
 and performs a case-insensitive string-comparison to the corpora.
 * The program does not account for tenses meaning `analyzed` would be ignored 
 even though it is an American spelling.
-* It also does not try to capture intent in any way meaning spelling mistakes
+* It does not try to capture intent in any way meaning spelling mistakes
  and alternate meanings of words are ignored. 
+* Non-words are ignored. Hypens are acceptable.
+* Compound words such as colorblind are not matched unless colorblind is in 
+the corpus
 * Data from the GraphQL API is fetched in batches with default being 10. This
  behavior can be modified with the `-s` flag
 
@@ -87,3 +90,8 @@ Global Flags:
 #### Auto-completion
 
 tpt cli supports tab-completion 
+
+#### Run Tests
+```bash
+>go test -v ./...
+```

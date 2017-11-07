@@ -8,9 +8,12 @@ import (
   "fmt"
 )
 
+// Dialect Detectors must implement a method which returns a corpus and another
+// which implements the algorithm which categorizes a product into the
+// appropriate dialect
 type Detector interface {
   Corpus () (Corpus)
-  Flag(p Product) (string)
+  Categorize(p Product) (string)
 }
 
 type NaiveDetector struct {
@@ -21,7 +24,9 @@ func (d NaiveDetector) Corpus () (Corpus) {
    return d.corpus
 }
 
-func (d NaiveDetector) Flag(p Product) (string) {
+// Given a product, santizes the name and description fields,
+// and searches for the resulting tokens in the corpora
+func (d NaiveDetector) Categorize(p Product) (string) {
   hasAmericanWord, hasBritishWord := false, false
   americanWord, britishWord := "", ""
 
@@ -65,8 +70,9 @@ func words(p Product) *map[string]bool {
   return &words;
 }
 
+// tokenizes, singularizes, drops non-words and converts to lower case
 func santize(s string, words *map[string]bool) {
-  var word = regexp.MustCompile(`^[A-Za-z]+$`)
+  var word = regexp.MustCompile(`^[A-Za-z-]+$`)
 
   for _, w := range tokenize.TextToWords(s) {
     if word.MatchString(w) {

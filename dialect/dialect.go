@@ -41,18 +41,21 @@ var queryStr = `{
 var corpus = Corpus{make(map[string]bool), make(map[string]bool)}
 var detector = NaiveDetector{corpus}
 
+// Entry point for detect-dialect command
 func Detect(cmd *cobra.Command) {
   setupCorpus(cmd)
 
   if !cmd.Flag(ProductIds).Changed {
-    flag(getProducts(viper.GetStringSlice(ProductIds)), detector)
+    // using default product-ids provided in config
+    categorize(getProducts(viper.GetStringSlice(ProductIds)), detector)
   } else {
+    // user provided product-id-file
     file, err := os.Open(viper.GetString(ProductIds))
     panic(err)
     defer file.Close()
     scanner := bufio.NewScanner(file)
     for scanner.Scan() {
-      flag(
+      categorize(
         getProducts(
           batch(viper.GetInt(BatchSize), scanner)),
         detector)
@@ -60,12 +63,14 @@ func Detect(cmd *cobra.Command) {
   }
 }
 
-func flag(products []Product, detector Detector) {
+// flags (by printing to stdout) dialect-category of products
+func categorize(products []Product, detector Detector) {
   for _, p := range products {
-    fmt.Printf("%-8s %s\n", p.Id, detector.Flag(p))
+    fmt.Printf("%-8s %s\n", p.Id, detector.Categorize(p))
   }
 }
 
+// fetches data from GraphQL API
 func getProducts(ids []string) []Product {
   q := strings.Replace(queryStr, "$input", strings.Join(ids, ","), 1)
   if viper.GetBool("verbose") {
@@ -82,9 +87,11 @@ func getProducts(ids []string) []Product {
   data := map[string]map[string][]Product{"data":
     {"products": make([]Product, 0)}}
   panic(json.Unmarshal(body, &data))
+
   return data["data"]["products"]
 }
 
+// allows us to fetch data from teh GraphQL API in batches
 func batch(size int, scanner *bufio.Scanner) []string {
   productIds := make([]string, 0)
   productIds = append(productIds, scanner.Text())
@@ -127,6 +134,7 @@ func loadCorpus(reader io.ReadCloser, m map[string]bool) {
   panic(scanner.Err())
 }
 
+// wrapper to print errors
 func panic(err error) {
   if err != nil {
     fmt.Printf("fetch: %v\n", err)
