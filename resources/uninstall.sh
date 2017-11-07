@@ -17,14 +17,9 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     done
 
     bin="$GOPATH/bin/tpt...";
-    echo "Deleting $bin";
     rm -f $bin;
-
     rm -f $HOME/.tpt.yaml
-
-    if brew ls --versions bash-completion > /dev/null; then
-      rm -f $(brew --prefix)/etc/bash_completion.d/tpt_bash_completion.sh
-    fi
+    rm -f $(brew --prefix)/etc/bash_completion.d/tpt_bash_completion.sh
 else
     echo "$OSTYPE is not supported";
 fi
