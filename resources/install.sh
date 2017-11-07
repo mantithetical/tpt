@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
 brew install go;
-
+if [ -z "$GOPATH" ]; then
+    mkdir $HOME/go
+    export GOPATH=$HOME/go
+fi
 go get github.com/mantithetical/tpt;
 cd $GOPATH/src/github.com/mantithetical/tpt;
 got get ./...;
