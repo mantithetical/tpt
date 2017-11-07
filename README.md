@@ -7,15 +7,15 @@ none.
 
 Notes: 
 * `NaiveDetector` tokenizes and singularizes input, drops non-letters and 
-and performs a case-insensitive string-comparison to the corpora.
+performs a case-insensitive string-comparison to the corpus.
 * The program does not account for tenses meaning `analyzed` would be ignored 
 even though it is an American spelling.
 * It does not try to capture intent in any way meaning spelling mistakes
  and alternate meanings of words are ignored. 
 * Non-words are ignored. Hypens are acceptable.
-* Compound words such as colorblind are not matched unless colorblind is in 
+* Compound words such as `colorblind` are not matched unless `colorblind` is in 
 the corpus
-* Data from the GraphQL API is fetched in batches with default being 10. This
+* Data from the GraphQL API is fetched in batches (the default being 10). This
  behavior can be modified with the `-s` flag
 
 ```bash
