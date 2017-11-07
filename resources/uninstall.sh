@@ -21,7 +21,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
         rm -fr $src;
     done
 
-    bin="$GOPATH/bin/tpt...";
+    bin="$GOPATH/bin/tpt";
     rm -f $bin;
     rm -f $HOME/.tpt.yaml
     rm -f $(brew --prefix)/etc/bash_completion.d/tpt_bash_completion.sh
